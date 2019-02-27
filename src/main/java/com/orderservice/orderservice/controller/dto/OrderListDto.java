@@ -1,4 +1,4 @@
-package com.orderservice.orderservice.dto;
+package com.orderservice.orderservice.controller.dto;
 
 import java.util.Date;
 

@@ -1,29 +1,17 @@
 package com.orderservice.orderservice.model;
 
-
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 @Entity
-@Table(name = "CUSTOMER")
+@Table(name = "customer")
 public class Customer {
-
     @Id
-    @Column(name="CUSTOMER_ID")
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name="FIRSTNAME", length = 50)
-    private String firstName;
-    @Column(name="LASTNAME", length = 50)
-    private String lastName;
-    @Column(name="ADDRESS")
-    private String address;
-
+    @Column(name = "username", length = 50)
+    private String username;
+    @Column(name = "phoneNo", length = 50)
+    private String phoneNo;
 
     public Long getId() {
         return id;
@@ -33,27 +21,19 @@ public class Customer {
         this.id = id;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getLastName() {
-        return lastName;
+    public String getPhoneNo() {
+        return phoneNo;
     }
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
+    public void setPhoneNo(String phoneNo) {
+        this.phoneNo = phoneNo;
     }
 }

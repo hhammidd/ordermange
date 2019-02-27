@@ -1,26 +1,19 @@
 package com.orderservice.orderservice.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
 import java.util.Date;
 
-
 @Entity
-@Table(name = "ORDERS")
+@Table(name = "orders")
 public class Orders {
-
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "ORDER_DATE")
     private Date registrationDate;
-
     @ManyToOne
-    //@JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
-
 
     public Long getId() {
         return id;

@@ -1,27 +1,18 @@
 package com.orderservice.orderservice.model;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.math.BigDecimal;
 
 @Entity
-@Table(name = "ORDERS_ITEM")
+@Table(name = "orders_item")
 public class OrdersItem {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(name = "QUANTITY")
+    @ManyToOne
+    private Orders orders;
+    @ManyToOne
+    private Production production;
     private double quantity;
-
-    @ManyToOne
-    //@JoinColumn(name = "ORDER_ID", referencedColumnName = "ORDER_ID")
-    private Orders order;
-
-    @ManyToOne
-    //@JoinColumn(name = "product_id", referencedColumnName = "product_id")
-    private Product product;
 
     public Long getId() {
         return id;
@@ -31,22 +22,13 @@ public class OrdersItem {
         this.id = id;
     }
 
-    public Orders getOrder() {
-        return order;
+    public Production getProduction() {
+        return production;
     }
 
-    public void setOrder(Orders order) {
-        this.order = order;
+    public void setProduction(Production production) {
+        this.production = production;
     }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
-    }
-
 
     public double getQuantity() {
         return quantity;
@@ -54,5 +36,13 @@ public class OrdersItem {
 
     public void setQuantity(double quantity) {
         this.quantity = quantity;
+    }
+
+    public Orders getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Orders orders) {
+        this.orders = orders;
     }
 }

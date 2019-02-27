@@ -1,43 +1,41 @@
 package com.orderservice.orderservice.controller;
 
-import com.orderservice.orderservice.dto.OrderListDto;
-import com.orderservice.orderservice.service.OrderService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.ArrayList;
+import com.orderservice.orderservice.controller.dto.OrdersTo;
+import com.orderservice.orderservice.service.OrdersService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
-//TODO @RestController why not?
-@Controller
-@RequestMapping(value="/orders")
+@RestController
+@RequestMapping("/orders")
 public class OrdersController {
 
     @Autowired
-    private OrderService orderService;
+    private OrdersService ordersService;
 
-    // TODO 1. GET /customers/3/orders should get the list of all orders from customer 3
-    //@RequestMapping(value="/{customerId}/customer", method= RequestMethod.GET)
-    //List<Order> findAll1(@RequestParam String customerId){}
-    // TODO order_date order_id status
-
-    @RequestMapping(value="/{customerId}/customer", method= RequestMethod.GET)
-    List<OrderListDto> listOrdersOfCustomer(@PathVariable int customerId){
-        List<OrderListDto> orderListDtos = new ArrayList<>();
-        //TODO service fo setting results
-        orderListDtos = orderService.getListOrderForCustomer(customerId);
-        return orderListDtos;
+    @GetMapping("/{ordersId}")
+    public OrdersTo getOrdersById(@PathVariable(name = "ordersId") long orderId) {
+        return ordersService.getById(orderId);
     }
 
-    // TODO GET which customer which productname and how many
+    @GetMapping
+    public List<OrdersTo> getOrdersByCustomerId(@RequestParam(name = "customer_id", required = false) Long customerId) {
+        if(customerId != null)
+            return ordersService.getByCustomerId(customerId);
+        return ordersService.getAll();
+    }
 
-    // TODO DELETE order by customerId
+    @PostMapping
+    public OrdersTo createOrders(@RequestBody OrdersTo orders) {
+        return ordersService.create(orders);
+    }
 
-    // TODO UPDATE Order state
-
-
+    //only updates order properties not items
+    @PutMapping("/{ordersId}")
+    public OrdersTo updateOrders(@PathVariable(name = "ordersId") long ordersId, @RequestBody OrdersTo orders) {
+        orders.setId(ordersId);
+        return ordersService.update(orders);
+    }
 }
