@@ -3,63 +3,39 @@ package com.orderservice.orderservice.model;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
+
 
 @Entity
 @Table(name = "ORDERS")
-public class Orders implements Serializable {
+public class Orders {
 
     @Id
-    @Column(name="ORDER_ID")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @Temporal(TemporalType.DATE)
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "ORDER_DATE")
-    private Date orderDate;
-
-    @Column(name = "STATUS")
-    private String status;
-
+    private Date registrationDate;
 
     @ManyToOne
-    @JoinColumn(name = "customerId", referencedColumnName = "CUSTOMER_ID")
+    //@JoinColumn(name = "customer_id", referencedColumnName = "customer_id")
     private Customer customer;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, fetch = FetchType.EAGER, mappedBy = "order")
-    private Set<OrderProduct> orderProducts;
 
-    public Set<OrderProduct> getOrderProducts() {
-        return orderProducts;
-    }
-
-    public void setOrderProducts(Set<OrderProduct> orderProducts) {
-        this.orderProducts = orderProducts;
-    }
-
-    public long getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
-    public Date getOrderDate() {
-        return orderDate;
+    public Date getRegistrationDate() {
+        return registrationDate;
     }
 
-    public void setOrderDate(Date orderDate) {
-        this.orderDate = orderDate;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
+    public void setRegistrationDate(Date registrationDate) {
+        this.registrationDate = registrationDate;
     }
 
     public Customer getCustomer() {

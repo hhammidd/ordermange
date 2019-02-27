@@ -10,37 +10,27 @@ import java.util.Set;
 
 @Entity
 @Table(name = "CUSTOMER")
-public class Customer implements Serializable {
+public class Customer {
 
     @Id
     @Column(name="CUSTOMER_ID")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private long customerId;
+    private Long id;
 
-    @Column(name="FIRSTNAME")
+    @Column(name="FIRSTNAME", length = 50)
     private String firstName;
-    @Column(name="LASTNAME")
+    @Column(name="LASTNAME", length = 50)
     private String lastName;
     @Column(name="ADDRESS")
     private String address;
 
-    @OneToMany(mappedBy = "customer")
-    Set<Orders> orderSet = new HashSet<>();
 
-    public Set<Orders> getOrderSet() {
-        return orderSet;
+    public Long getId() {
+        return id;
     }
 
-    public void setOrderSet(Set<Orders> orderSet) {
-        this.orderSet = orderSet;
-    }
-
-    public long getCustomerId() {
-        return customerId;
-    }
-
-    public void setCustomerId(long customerId) {
-        this.customerId = customerId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
