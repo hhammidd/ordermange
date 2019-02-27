@@ -7,8 +7,16 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface OrderRepository extends JpaRepository<Orders , Long> {
+public interface OrderRepository extends JpaRepository<Orders , Integer> {
 
-    //@Query("SELECT o FROM Orders o WHERE o.customer_id = :customer_id")
-    //List<Orders> findAllByCustomerId(@Param("customer_id")long customer_id);
+    //@Query("SELECT o FROM Orders o WHERE o.customer.customer_id = 1")
+    //Orders findByIdAndCustomer(@Param("id") int id , @Param("customerId") int customerId);
+
+    //Orders findByCustomer(int customer_id);
+
+    //@Query("SELECT o FROM Orders o WHERE o.customer.customerId = :customerId")
+    //public List<Orders> findByIdAndCustomer(@Param("customerId") int customerId);
+
+
+    //public List<Orders> findByCustomerId(int customerId);
 }
