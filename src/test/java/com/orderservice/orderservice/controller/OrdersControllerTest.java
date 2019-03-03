@@ -1,26 +1,33 @@
 package com.orderservice.orderservice.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orderservice.orderservice.controller.dto.OrdersItemTo;
 import com.orderservice.orderservice.controller.dto.OrdersTo;
 import com.orderservice.orderservice.service.OrdersService;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.mockito.BDDMockito.given;
-import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -29,36 +36,150 @@ public class OrdersControllerTest {
 
     @MockBean
     private OrdersService ordersService;
+
     @Autowired
     private MockMvc mockMvc;
 
-    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     @Test
-    public void getOrders() throws Exception {
+    public void test() throws Exception {
+        testCreateOrders();
+        testUpdateOrder();
+        testgetOrdersByCustomerId();
+        testGetOrdersById();
+        testDeleteOrder();
+    }
 
+    @Test
+    public void testGetOrdersById() throws Exception {
+        OrdersTo mockOrdersTo = new OrdersTo();
+        List<OrdersItemTo> mockOrdersItemToList = new ArrayList<>();
+        OrdersItemTo mockOrderItemTo = new OrdersItemTo();
+
+        mockOrderItemTo.setId((long) 2);
+        mockOrderItemTo.setProductionId(4);
+        mockOrderItemTo.setQuantity(22);
+        mockOrdersItemToList.add(mockOrderItemTo);
+
+        mockOrdersTo.setId((long) 11);
+        mockOrdersTo.setCustomerId((long) 10);
         Date date = DATE_FORMAT.parse("2017-01-01");
+        mockOrdersTo.setRegistrationDate(date);
+        mockOrdersTo.setOrdersItems(mockOrdersItemToList);
+
+        when(ordersService.getById(anyLong())).thenReturn(mockOrdersTo);
+        mockMvc.perform(get("/orders/2"))
+                .andExpect(status().isOk())
+                //TODO primary keys and date format remains
+                .andExpect(jsonPath("$.customerId", is(10)))
+                .andExpect(jsonPath("$.ordersItems[0].productionId", is(4)))
+                .andExpect(jsonPath("$.ordersItems[0].quantity", is(22.0)));
+    }
+
+    @Test
+    public void testgetOrdersByCustomerId() throws Exception {
+
+        List<OrdersTo> mockOrdersToList = new ArrayList<>();
+        OrdersTo mockOrdersTo = new OrdersTo();
+
+        List<OrdersItemTo> mockOrdersItemToList = new ArrayList<>();
+        OrdersItemTo mockOrderItemTo1 = new OrdersItemTo();
+        mockOrderItemTo1.setId((long) 2);
+        mockOrderItemTo1.setProductionId(4);
+        mockOrderItemTo1.setQuantity(22);
+        mockOrdersItemToList.add(mockOrderItemTo1);
+
+        OrdersItemTo mockOrderItemTo2 = new OrdersItemTo();
+        mockOrderItemTo2.setId((long) 3);
+        mockOrderItemTo2.setProductionId(2);
+        mockOrderItemTo2.setQuantity(100);
+        mockOrdersItemToList.add(mockOrderItemTo2);
+
+        mockOrdersTo.setId((long) 11);
+        mockOrdersTo.setCustomerId((long) 10);
+        Date date = DATE_FORMAT.parse("2017-01-01");
+        mockOrdersTo.setRegistrationDate(date);
+        mockOrdersTo.setOrdersItems(mockOrdersItemToList);
+
+        mockOrdersToList.add(mockOrdersTo);
+
+        when(ordersService.getByCustomerId(anyLong())).thenReturn(mockOrdersToList);
+        mockMvc.perform(get("/orders?customer_id=2"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].customerId", is(10)))
+                .andExpect(jsonPath("$[0].ordersItems[0].productionId", is(4)))
+                .andExpect(jsonPath("$[0].ordersItems[0].quantity", is(22.0)))
+                .andExpect(jsonPath("$[0].ordersItems[1].productionId", is(2)))
+                .andExpect(jsonPath("$[0].ordersItems[1].quantity", is(100.0)));
+
+    }
+
+    @Test
+    public void testUpdateOrder() throws Exception {
+
+        // TODO not complete
+        OrdersTo mockOrdersTo = new OrdersTo();
+        mockOrdersTo.setId((long) 8);
+        mockOrdersTo.setCustomerId((long) 3);
+        Date date = DATE_FORMAT.parse("2017-01-01");
+        //mockOrdersTo.setRegistrationDate(date);
+
+        OrdersTo ordersTo = new OrdersTo();
+        //ordersTo.setId((long) 13);
+        ordersTo.setCustomerId((long) 3);
+        //TODO check date one
+        //ordersTo.setRegistrationDate(date);
+        ordersTo.setOrdersItems(null);
+
+        when(ordersService.update(ordersTo)).thenReturn(mockOrdersTo);
+        mockMvc.perform(put("/orders/8")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(mockOrdersTo)))
+                .andExpect(status().isOk());
+
+        //TODO add below except
+        //.andExpect(jsonPath("$.customerId", is(3)));
+
+    }
+
+    @Test
+    public void testCreateOrders() throws Exception {
 
         OrdersTo mockOrdersTo = new OrdersTo();
         OrdersItemTo mockOrderItemTo = new OrdersItemTo();
 
-        mockOrderItemTo.setId((long) 1);
-        mockOrderItemTo.setProductionId(1);
-        mockOrderItemTo.setQuantity(22);
+        mockOrderItemTo.setId((long) 16);
+        mockOrderItemTo.setProductionId(3);
+        mockOrderItemTo.setQuantity(200);
 
         List<OrdersItemTo> mockOrdersItemToList = new ArrayList<>();
         mockOrdersItemToList.add(mockOrderItemTo);
 
-        mockOrdersTo.setId((long) 1);
-        mockOrdersTo.setCustomerId((long) 1);
-        mockOrdersTo.setRegistrationDate(date);
+        mockOrdersTo.setId((long) 17);
+        mockOrdersTo.setCustomerId((long) 3);
         mockOrdersTo.setOrdersItems(mockOrdersItemToList);
 
-        given(ordersService.getById(1)).willReturn(mockOrdersTo);
-        this.mockMvc.perform(get("/orders/1")).andExpect(status().isOk());
+        when(ordersService.create(any())).thenReturn(mockOrdersTo);
+        mockMvc.perform(post("/orders")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(mockOrdersTo)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.customerId", is(3)))
+                .andExpect(jsonPath("$.ordersItems[0].productionId", is(3)))
+                .andExpect(jsonPath("$.ordersItems[0].quantity", is(200.0)));
     }
 
+    private void testDeleteOrder() {
+    }
 
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 }

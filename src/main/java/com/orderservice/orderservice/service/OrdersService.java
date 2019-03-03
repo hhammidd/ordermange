@@ -15,4 +15,6 @@ public interface OrdersService {
     OrdersTo create(OrdersTo orders);
 
     OrdersTo update(OrdersTo orders);
+
+    boolean deleteOrder(long ordersId);
 }
