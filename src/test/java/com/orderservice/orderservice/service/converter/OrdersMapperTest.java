@@ -6,6 +6,9 @@ import com.orderservice.orderservice.controller.dto.OrdersTo;
 import com.orderservice.orderservice.model.Customer;
 import com.orderservice.orderservice.model.Orders;
 import static org.junit.Assert.*;
+
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,38 +21,44 @@ import java.util.List;
 public class OrdersMapperTest {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static OrdersMapper om;
+    private static OrdersTo ordersTo;
+    public static Orders orders;
 
-    @Autowired
-    private OrdersMapper ordersMapper;
+    @BeforeClass
+    public static void startup(){
+        om = new OrdersMapper();
+        ordersTo = new OrdersTo();
+        orders = new Orders();
+    }
 
-    @Test
-    public void convertToDtoTest() throws Exception{
-        OrdersTo ordersTo = new OrdersTo();
-        List<OrdersItemTo> ordersItemToList = new ArrayList<>();
-        OrdersItemTo orderItemTo = new OrdersItemTo();
-
-        orderItemTo.setId((long) 2);
-        orderItemTo.setProductionId(4);
-        orderItemTo.setQuantity(22);
-        ordersItemToList.add(orderItemTo);
-
+    @Before
+    public void init() throws Exception{
         ordersTo.setId((long) 11);
         ordersTo.setCustomerId((long) 10);
         Date date = DATE_FORMAT.parse("2017-01-01");
         ordersTo.setRegistrationDate(date);
-        ordersTo.setOrdersItems(ordersItemToList);
+        ordersTo.setOrdersItems(null);
 
-
-        Orders orders = new Orders();
         orders.setId((long) 11);
         orders.setRegistrationDate(date);
 
         Customer customer = new Customer();
         customer.setId((long) 10);
+        customer.setUsername("francesco");
+        customer.setPhoneNo("23332332");
         orders.setCustomer(customer);
-
-
-         assertEquals(ordersMapper.convertToDto(orders), ordersTo);
-
     }
+
+    @Test
+    public void convertToDtoTest() {
+
+        OrdersTo ordersToAfter = om.convertToDto(orders);
+        assertEquals(ordersTo.getCustomerId(), ordersToAfter.getCustomerId());
+        assertEquals(ordersTo.getRegistrationDate(), ordersToAfter.getRegistrationDate());
+        assertEquals(ordersTo.getId(), ordersToAfter.getId());
+    }
+
+
+
 }
