@@ -2,7 +2,6 @@ package com.orderservice.orderservice.service;
 
 
 
-import com.orderservice.orderservice.controller.dto.OrdersTo;
 import com.orderservice.orderservice.service.converter.OrdersItemMapper;
 import com.orderservice.orderservice.service.converter.OrdersMapper;
 import com.orderservice.orderservice.service.dao.OrdersDao;
@@ -39,15 +38,10 @@ public class OrdersServiceTest  {
     }
 
     private void testGetByCustomerId() {
-
-
-
     }
 
     private void testGetById() {
-
-
-
+        //TODO
     }
 
     private void testGetAll() {
