@@ -1,22 +1,18 @@
 package com.orderservice.orderservice.service.converter;
 
 
-import com.orderservice.orderservice.controller.dto.OrdersItemTo;
 import com.orderservice.orderservice.controller.dto.OrdersTo;
 import com.orderservice.orderservice.model.Customer;
 import com.orderservice.orderservice.model.Orders;
+
 import static org.junit.Assert.*;
 
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class OrdersMapperTest {
 
@@ -26,32 +22,27 @@ public class OrdersMapperTest {
     public static Orders orders;
 
     @BeforeClass
-    public static void startup(){
+    public static void startup() {
         om = new OrdersMapper();
         ordersTo = new OrdersTo();
         orders = new Orders();
     }
 
-    @Before
-    public void init() throws Exception{
-        ordersTo.setId((long) 11);
-        ordersTo.setCustomerId((long) 10);
+    @Test
+    public void convertToDtoTest() throws Exception {
+        ordersTo.setId(11L);
+        ordersTo.setCustomerId(10L);
         Date date = DATE_FORMAT.parse("2017-01-01");
         ordersTo.setRegistrationDate(date);
         ordersTo.setOrdersItems(null);
 
-        orders.setId((long) 11);
+        orders.setId(11L);
         orders.setRegistrationDate(date);
-
         Customer customer = new Customer();
-        customer.setId((long) 10);
+        customer.setId(10L);
         customer.setUsername("francesco");
         customer.setPhoneNo("23332332");
         orders.setCustomer(customer);
-    }
-
-    @Test
-    public void convertToDtoTest() {
 
         OrdersTo ordersToAfter = om.convertToDto(orders);
         assertEquals(ordersTo.getCustomerId(), ordersToAfter.getCustomerId());
@@ -59,6 +50,27 @@ public class OrdersMapperTest {
         assertEquals(ordersTo.getId(), ordersToAfter.getId());
     }
 
+
+    @Test
+    public void convertToDomainTest() throws Exception {
+
+        ordersTo.setId(11L);
+        ordersTo.setCustomerId(10L);
+        Date date = DATE_FORMAT.parse("2017-01-01");
+        ordersTo.setRegistrationDate(date);
+        ordersTo.setOrdersItems(null);
+
+        orders.setId(11L);
+        orders.setRegistrationDate(date);
+
+        Customer customer = new Customer();
+        customer.setId(10L);
+        orders.setCustomer(customer);
+
+        Orders ordersAfter = om.convertToDomain(ordersTo);
+        assertEquals(orders.getCustomer().getId(), ordersAfter.getCustomer().getId());
+        assertEquals(orders.getId(), ordersAfter.getId());
+    }
 
 
 }

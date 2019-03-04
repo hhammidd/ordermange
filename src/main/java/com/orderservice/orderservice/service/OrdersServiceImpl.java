@@ -59,7 +59,6 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Override
     public OrdersTo create(OrdersTo ordersTo) {
-        //TODO check validity
         Orders orders = ordersMapper.convertToDomain(ordersTo);
         orders.setId(null);
         orders.setRegistrationDate(new Date());
@@ -79,7 +78,6 @@ public class OrdersServiceImpl implements OrdersService {
 
     @Override
     public OrdersTo update(OrdersTo ordersTo) {
-        //TODO check validity
         Orders orders = ordersMapper.convertToDomain(ordersTo);
         orders.setRegistrationDate(new Date());
         return ordersMapper.convertToDto(ordersDao.save(orders));

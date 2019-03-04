@@ -2,17 +2,23 @@ package com.orderservice.orderservice.service;
 
 
 
+import com.orderservice.orderservice.controller.OrdersController;
 import com.orderservice.orderservice.service.converter.OrdersItemMapper;
 import com.orderservice.orderservice.service.converter.OrdersMapper;
 import com.orderservice.orderservice.service.dao.OrdersDao;
 import com.orderservice.orderservice.service.dao.OrdersItemsDao;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.stereotype.Service;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 
-@Service
+@RunWith(SpringJUnit4ClassRunner.class)
+@WebMvcTest(OrdersService.class)
+@SpringBootTest
 public class OrdersServiceTest  {
 
     @Autowired
@@ -28,36 +34,27 @@ public class OrdersServiceTest  {
     private OrdersItemsDao ordersItemsDao;
 
     @Test
-    public void test() {
-        testGetById();
-        testGetByCustomerId();
-        testGetAll();
-        testCreate();
-        testUpdate();
-        testDeleteOredr();
+    public void testGetByCustomerId() {
     }
 
-    private void testGetByCustomerId() {
+    @Test
+    public void testGetById() {
     }
 
-    private void testGetById() {
-        //TODO
+    @Test
+    public void testGetAll() {
     }
 
-    private void testGetAll() {
-        //TODO
+    @Test
+    public void testCreate() {
     }
 
-    private void testCreate() {
-        //TODO
+    @Test
+    public void testUpdate() {
     }
 
-    private void testUpdate() {
-        //TODO
-    }
-
-    private void testDeleteOredr() {
-        //TODO
+    @Test
+    public void testDeleteOredr() {
     }
 
 }

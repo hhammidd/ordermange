@@ -43,27 +43,18 @@ public class OrdersControllerTest {
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     @Test
-    public void test() throws Exception {
-        testCreateOrders();
-        testUpdateOrder();
-        testgetOrdersByCustomerId();
-        testGetOrdersById();
-        testDeleteOrder();
-    }
-
-    @Test
     public void testGetOrdersById() throws Exception {
         OrdersTo mockOrdersTo = new OrdersTo();
         List<OrdersItemTo> mockOrdersItemToList = new ArrayList<>();
         OrdersItemTo mockOrderItemTo = new OrdersItemTo();
 
-        mockOrderItemTo.setId((long) 2);
+        mockOrderItemTo.setId(2L);
         mockOrderItemTo.setProductionId(4);
         mockOrderItemTo.setQuantity(22);
         mockOrdersItemToList.add(mockOrderItemTo);
 
-        mockOrdersTo.setId((long) 11);
-        mockOrdersTo.setCustomerId((long) 10);
+        mockOrdersTo.setId(11L);
+        mockOrdersTo.setCustomerId(10L);
         Date date = DATE_FORMAT.parse("2017-01-01");
         mockOrdersTo.setRegistrationDate(date);
         mockOrdersTo.setOrdersItems(mockOrdersItemToList);
@@ -71,7 +62,6 @@ public class OrdersControllerTest {
         when(ordersService.getById(anyLong())).thenReturn(mockOrdersTo);
         mockMvc.perform(get("/orders/2"))
                 .andExpect(status().isOk())
-                //TODO primary keys and date format remains
                 .andExpect(jsonPath("$.customerId", is(10)))
                 .andExpect(jsonPath("$.ordersItems[0].productionId", is(4)))
                 .andExpect(jsonPath("$.ordersItems[0].quantity", is(22.0)));
@@ -85,19 +75,19 @@ public class OrdersControllerTest {
 
         List<OrdersItemTo> mockOrdersItemToList = new ArrayList<>();
         OrdersItemTo mockOrderItemTo1 = new OrdersItemTo();
-        mockOrderItemTo1.setId((long) 2);
+        mockOrderItemTo1.setId(2L);
         mockOrderItemTo1.setProductionId(4);
         mockOrderItemTo1.setQuantity(22);
         mockOrdersItemToList.add(mockOrderItemTo1);
 
         OrdersItemTo mockOrderItemTo2 = new OrdersItemTo();
-        mockOrderItemTo2.setId((long) 3);
+        mockOrderItemTo2.setId(3L);
         mockOrderItemTo2.setProductionId(2);
         mockOrderItemTo2.setQuantity(100);
         mockOrdersItemToList.add(mockOrderItemTo2);
 
-        mockOrdersTo.setId((long) 11);
-        mockOrdersTo.setCustomerId((long) 10);
+        mockOrdersTo.setId(11L);
+        mockOrdersTo.setCustomerId(10L);
         Date date = DATE_FORMAT.parse("2017-01-01");
         mockOrdersTo.setRegistrationDate(date);
         mockOrdersTo.setOrdersItems(mockOrdersItemToList);
@@ -118,18 +108,12 @@ public class OrdersControllerTest {
     @Test
     public void testUpdateOrder() throws Exception {
 
-        // TODO not complete
         OrdersTo mockOrdersTo = new OrdersTo();
         mockOrdersTo.setId((long) 8);
         mockOrdersTo.setCustomerId((long) 3);
-        Date date = DATE_FORMAT.parse("2017-01-01");
-        //mockOrdersTo.setRegistrationDate(date);
 
         OrdersTo ordersTo = new OrdersTo();
-        //ordersTo.setId((long) 13);
-        ordersTo.setCustomerId((long) 3);
-        //TODO check date one
-        //ordersTo.setRegistrationDate(date);
+        ordersTo.setCustomerId(3L);
         ordersTo.setOrdersItems(null);
 
         when(ordersService.update(ordersTo)).thenReturn(mockOrdersTo);
@@ -137,10 +121,6 @@ public class OrdersControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(mockOrdersTo)))
                 .andExpect(status().isOk());
-
-        //TODO add below except
-        //.andExpect(jsonPath("$.customerId", is(3)));
-
     }
 
     @Test
@@ -149,15 +129,15 @@ public class OrdersControllerTest {
         OrdersTo mockOrdersTo = new OrdersTo();
         OrdersItemTo mockOrderItemTo = new OrdersItemTo();
 
-        mockOrderItemTo.setId((long) 16);
+        mockOrderItemTo.setId(16L);
         mockOrderItemTo.setProductionId(3);
         mockOrderItemTo.setQuantity(200);
 
         List<OrdersItemTo> mockOrdersItemToList = new ArrayList<>();
         mockOrdersItemToList.add(mockOrderItemTo);
 
-        mockOrdersTo.setId((long) 17);
-        mockOrdersTo.setCustomerId((long) 3);
+        mockOrdersTo.setId(17L);
+        mockOrdersTo.setCustomerId(3L);
         mockOrdersTo.setOrdersItems(mockOrdersItemToList);
 
         when(ordersService.create(any())).thenReturn(mockOrdersTo);
@@ -168,9 +148,6 @@ public class OrdersControllerTest {
                 .andExpect(jsonPath("$.customerId", is(3)))
                 .andExpect(jsonPath("$.ordersItems[0].productionId", is(3)))
                 .andExpect(jsonPath("$.ordersItems[0].quantity", is(200.0)));
-    }
-
-    private void testDeleteOrder() {
     }
 
     public static String asJsonString(final Object obj) {
